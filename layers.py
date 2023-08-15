@@ -58,9 +58,9 @@ class Activation(Layer):
         '''
         Perform partial derivative of the activation function
         Yi = f(Xi)
-        dE/dXi = dE/dYi * dYi/dXi since dYi/dXi = f'(Xi)
-        dE/dXi = dE/dYi * f'(Xi) This is element-wise multiplication as the derivative of the activation function should be the same
-        hence we multiply every element in the output gradient(dE/dYi) matrix with this derivative i.e scalar multipication
+        dE/dXi = dE/dYi * dYi/dXi since dYi/dXi = f'(Xi) then:
+        dE/dXi = dE/dYi * f'(Xi) This is element-wise multiplication since each output has a corresponding activation function that produced it 
+        hence we multiply every element in the output gradient(dE/dYi) matrix with its corresponding derivative f'(Xi)
         '''
         return np.multiply(output_gradient, self.activation_derived(self.input))
     
