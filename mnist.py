@@ -44,7 +44,7 @@ def predict(network, input):
 
     return output
 
-def train(network, loss, loss_derived, x_train, y_train, epochs = 1000, learning_rate = 0.01, verbose = True):
+def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_rate = 0.1, verbose = True):
     for each in range(epochs):
         error = 0
         for x, y in zip(x_train, y_train):
@@ -61,6 +61,14 @@ def train(network, loss, loss_derived, x_train, y_train, epochs = 1000, learning
         if verbose:
             print(f'{each + 1}/{epochs}, error = {error}')
 
+
+train(network, mse, mse_prime, x_train, y_train, epochs=100, learning_rate=0.1)
+
+for x, y in zip(x_test, y_test):
+    # Test neural network with inputs and labelled outputs
+    output = predict(network, x)
+
+    print('Pred:', np.argmax(output), '\tTrue:', np.argmax(y))
 
 
 
