@@ -98,12 +98,3 @@ class Softmax(Layer):
         n = np.size(self.output)
         return np.dot((np.identity(n) - self.output.T) * self.output, output_gradient)
     
-'''
-Obtain the error the subtracting the output values of the network from the actual values in the labels and square this value.
-Error values are summed up, constituting mean squared error of every iteration
-'''
-def mse(y_true, y_pred):
-    return np.mean(np.power(y_true - y_pred, 2))
-
-def mse_prime(y_true, y_pred):
-    return 2 * (y_pred - y_true) / np.size(y_true)
