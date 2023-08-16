@@ -36,7 +36,7 @@ class Dense(Layer):
         weight_gradient = np.dot(output_gradient, self.input.T)
 
         # Calculate the gradient descent for the input to the current layer to serve as the output of the preceding layer
-        input_gradient = np.dot(output_gradient, self.weights.T)
+        input_gradient = np.dot(self.weights.T, output_gradient)
 
         # Nudge parameters according to their contribution to the error. When value is positive you reduce it hence subtract, when negative you increase it hence add
         self.weights -= learning_rate * weight_gradient

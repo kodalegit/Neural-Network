@@ -13,16 +13,20 @@ y_test = tf.keras.utils.to_categorical(y_test)
 
 x_train = x_train.reshape(x_train.shape[0], 28 * 28, 1)
 x_test = x_test.reshape(x_test.shape[0], 28 * 28, 1)
-x_train = x_train[:1000]
-y_train = y_train[:1000]
-x_test = x_test[1000:1500]
-y_test = y_test[1000:1500]
+y_train = y_train.reshape(y_train.shape[0], 10, 1)
+y_test = y_test.reshape(y_test.shape[0], 10, 1)
+x_train = x_train[:2000]
+y_train = y_train[:2000]
+x_test = x_test[2000:3000]
+y_test = y_test[2000:3000]
 
 network = [
-    Dense(28 * 28, 40),
-    Tanh(),
-    Dense(40, 10),
-    Tanh()
+    Dense(40, 28 * 28),
+    Sigmoid(),
+    Dense(20, 40),
+    Sigmoid(),
+    Dense(10, 20),
+    Sigmoid()
 ]
 
 '''
@@ -51,24 +55,32 @@ def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_
             output = predict(network, x)
 
             error += loss(y, output)
+                
             gradient = loss_derived(y, output)
 
             # Perform backward propagation for current iteration
             for layer in reversed(network):
                 gradient = layer.backward(gradient, learning_rate)
-
+        
         error /= len(x_train)
         if verbose:
             print(f'{each + 1}/{epochs}, error = {error}')
 
 
-train(network, mse, mse_prime, x_train, y_train, epochs=100, learning_rate=0.1)
+train(network, mse, mse_prime, x_train, y_train, epochs=700, learning_rate=0.1)
 
+total = 0
+predicted = 0
 for x, y in zip(x_test, y_test):
     # Test neural network with inputs and labelled outputs
     output = predict(network, x)
+    if np.argmax(output) == np.argmax(y):
+        predicted += 1
+    total += 1
+    #print('Pred:', np.argmax(output), '\tTrue:', np.argmax(y))
 
-    print('Pred:', np.argmax(output), '\tTrue:', np.argmax(y))
+accuracy = (predicted / total) * 100
+print(f'Accuracy: {accuracy:.4f}%')
 
 
 
