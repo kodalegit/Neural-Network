@@ -48,27 +48,31 @@ def predict(network, input):
 
     return output
 
-def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_rate = 0.1, verbose = True):
+def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_rate = 0.1, verbose = True, batch_size=32):
     for each in range(epochs):
         error = 0
 
         # Perform stochastic gradient descent to increase speed of convergence
-        for x, y in zip(x_train, y_train):
-            output = predict(network, x)
+        for i in range(0, len(x_train), batch_size):
+            x_batch = x_train[i:i+batch_size]
+            y_batch = y_train[i:i+batch_size]
 
-            error += loss(y, output)
-                
-            #gradient = loss_derived(y, output)
+            for x, y in zip(x_batch, y_batch):
+                output = predict(network, x)
 
-            # Calculate gradient of loss function using output - labels as opposed to derivative of loss function
-            gradient = output - y
-            # Perform backward propagation for current iteration
-            for layer in reversed(network):
-                gradient = layer.backward(gradient, learning_rate)
-        
-        error /= len(x_train)
-        if verbose:
-            print(f'{each + 1}/{epochs}, error = {error}')
+                error += loss(y, output)
+                    
+                #gradient = loss_derived(y, output)
+
+                # Calculate gradient of loss function using output - labels as opposed to derivative of loss function
+                gradient = output - y
+                # Perform backward propagation for current iteration
+                for layer in reversed(network):
+                    gradient = layer.backward(gradient, learning_rate)
+            
+            error /= batch_size
+            if verbose:
+                print(f'{each + 1}/{epochs}, error = {error}')
 
 
 train(network, mse, mse_prime, x_train, y_train, epochs=200, learning_rate=0.1)
