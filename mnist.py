@@ -15,10 +15,10 @@ x_train = x_train.reshape(x_train.shape[0], 28 * 28, 1)
 x_test = x_test.reshape(x_test.shape[0], 28 * 28, 1)
 y_train = y_train.reshape(y_train.shape[0], 10, 1)
 y_test = y_test.reshape(y_test.shape[0], 10, 1)
-x_train = x_train[:2000]
-y_train = y_train[:2000]
-x_test = x_test[2000:3000]
-y_test = y_test[2000:3000]
+x_train = x_train[:1000]
+y_train = y_train[:1000]
+x_test = x_test[:1000]
+y_test = y_test[:1000]
 
 network = [
     Dense(40, 28 * 28),
@@ -51,13 +51,17 @@ def predict(network, input):
 def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_rate = 0.1, verbose = True):
     for each in range(epochs):
         error = 0
+
+        # Perform stochastic gradient descent to increase speed of convergence
         for x, y in zip(x_train, y_train):
             output = predict(network, x)
 
             error += loss(y, output)
                 
-            gradient = loss_derived(y, output)
+            #gradient = loss_derived(y, output)
 
+            # Calculate gradient of loss function using output - labels as opposed to derivative of loss function
+            gradient = output - y
             # Perform backward propagation for current iteration
             for layer in reversed(network):
                 gradient = layer.backward(gradient, learning_rate)
@@ -67,7 +71,7 @@ def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_
             print(f'{each + 1}/{epochs}, error = {error}')
 
 
-train(network, mse, mse_prime, x_train, y_train, epochs=700, learning_rate=0.1)
+train(network, mse, mse_prime, x_train, y_train, epochs=200, learning_rate=0.1)
 
 total = 0
 predicted = 0
