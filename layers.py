@@ -85,6 +85,15 @@ class Sigmoid(Activation):
         
         super().__init__(sigmoid, sigmoid_derived)
 
+class ReLU(Activation):
+    def __init__(self) -> None:
+        def relu(x):
+            return np.maximum(0, x)
+        
+        def relu_derived(x):
+            return x > 0
+        
+        super().__init__(relu, relu_derived)
 
 class Softmax(Layer):
     # Normalize output values to get a probability distribution with joint probabilities adding up to 1
@@ -97,4 +106,6 @@ class Softmax(Layer):
     def backward(self, output_gradient, learning_rate):
         n = np.size(self.output)
         return np.dot((np.identity(n) - self.output.T) * self.output, output_gradient)
+    
+
     

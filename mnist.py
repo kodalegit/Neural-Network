@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from layers import Dense, Tanh, Sigmoid, Softmax
+from layers import Dense, Tanh, Sigmoid, Softmax, ReLU
 
 
 mnist = tf.keras.datasets.mnist
@@ -21,9 +21,9 @@ x_test = x_test[:2000]
 y_test = y_test[:2000]
 
 network = [
-    Dense(40, 28 * 28),
+    Dense(60, 28 * 28),
     Sigmoid(),
-    Dense(10, 40),
+    Dense(10, 60),
     Sigmoid()
 ]
 
@@ -69,7 +69,7 @@ def train(network, loss, loss_derived, x_train, y_train, epochs = 100, learning_
             print(f'{each + 1}/{epochs}, error = {error}')
 
 
-train(network, mse, mse_prime, x_train, y_train, epochs=200, learning_rate=0.11)
+train(network, mse, mse_prime, x_train, y_train, epochs=70, learning_rate=0.11)
 
 total = 0
 predicted = 0
